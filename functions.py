@@ -35,7 +35,8 @@ def type_check(item):
 
 def ph_url_check(url):
     parsed = urlparse.urlparse(url)
-    regions = ["www", "cn", "cz", "de", "es", "fr", "it", "nl", "jp", "pt", "pl", "rt"]
+    regions = ["www", "cn", "cz", "de", "es",
+               "fr", "it", "nl", "jp", "pt", "pl", "rt"]
     for region in regions:
         if parsed.netloc == region + ".pornhub.com":
             print("PornHub url validated.")
@@ -57,7 +58,8 @@ def ph_type_check(url):
     elif parsed.path.split('/')[1] == "playlist":
         print("This is a PLAYLIST url,")
     elif parsed.path.split('/')[1] == "view_video.php":
-        print("This is a VIDEO url. Please paste a model/pornstar/user/channel/playlist url.")
+        print(
+            "This is a VIDEO url. Please paste a model/pornstar/user/channel/playlist url.")
         sys.exit()
     else:
         print("Somethings wrong with the url. Please check it out.")
@@ -75,7 +77,8 @@ def ph_alive_check(url):
 
 def add_check(name_check):
     if name_check == "batch":
-        u_input = input("Please enter full path to the batch-file.txt (or c to cancel): ")
+        u_input = input(
+            "Please enter full path to the batch-file.txt (or c to cancel): ")
         if u_input == "c":
             print("Operation canceled.")
         else:
@@ -104,7 +107,8 @@ def get_item_name(item_type, url_item):
         title = finder.find(class_='title').text.replace('\n', '').strip()
     elif item_type == "users":
         finder = soup.find(class_='bottomInfoContainer')
-        title = finder.find('a', class_='float-left').text.replace('\n', '').strip()
+        title = finder.find(
+            'a', class_='float-left').text.replace('\n', '').strip()
     elif item_type == "playlist":
         finder = soup.find(id='playlistTopHeader')
         title = finder.find(id='watchPlaylist').text.replace('\n', '').strip()
@@ -115,7 +119,7 @@ def get_item_name(item_type, url_item):
     return title
 
 
-##################################### DOWNLOADING
+# DOWNLOADING
 
 
 def dl_all_items(conn):
@@ -143,11 +147,13 @@ def dl_all_items(conn):
         print("-----------------------------")
         print(row[1])
         print(row[2])
-        print("https://www.pornhub.com/" + str(row[1]) + "/" + str(row[2]) + url_after)
+        print("https://www.pornhub.com/" +
+              str(row[1]) + "/" + str(row[2]) + url_after)
         print("-----------------------------")
 
         # Find more available options here: https://github.com/ytdl-org/youtube-dl/blob/master/youtube_dl/YoutubeDL.py#L129-L279
-        outtmpl = get_dl_location('DownloadLocation') + '/' + str(row[1]) + '/' + str(row[3]) + '/%(title)s.%(ext)s'
+        outtmpl = get_dl_location('DownloadLocation') + '/' + \
+            str(row[1]) + '/' + str(row[3]) + '/%(title)s.%(ext)s'
         ydl_opts_start = {
             'format': 'best',
             'playliststart:': 1,
@@ -158,12 +164,14 @@ def dl_all_items(conn):
             'ignoreerrors': True,
         }
 
-        url = "https://www.pornhub.com/" + str(row[1]) + "/" + str(row[2] + url_after)
+        url = "https://www.pornhub.com/" + \
+            str(row[1]) + "/" + str(row[2] + url_after)
         with youtube_dl.YoutubeDL(ydl_opts_start) as ydl:
             ydl.download([url])
 
         try:
-            c.execute("UPDATE ph_items SET lastchecked=CURRENT_TIMESTAMP WHERE url_name = ?", (row[2],))
+            c.execute(
+                "UPDATE ph_items SET lastchecked=CURRENT_TIMESTAMP WHERE url_name = ?", (row[2],))
             conn.commit()
         except Error as e:
             print(e)
@@ -196,11 +204,13 @@ def dl_all_new_items(conn):
         print("-----------------------------")
         print(row[1])
         print(row[2])
-        print("https://www.pornhub.com/" + str(row[1]) + "/" + str(row[2]) + url_after)
+        print("https://www.pornhub.com/" +
+              str(row[1]) + "/" + str(row[2]) + url_after)
         print("-----------------------------")
 
         # Find more available options here: https://github.com/ytdl-org/youtube-dl/blob/master/youtube_dl/YoutubeDL.py#L129-L279
-        outtmpl = get_dl_location('DownloadLocation') + '/' + str(row[1]) + '/' + str(row[3]) + '/%(title)s.%(ext)s'
+        outtmpl = get_dl_location('DownloadLocation') + '/' + \
+            str(row[1]) + '/' + str(row[3]) + '/%(title)s.%(ext)s'
         ydl_opts = {
             'format': 'best',
             'outtmpl': outtmpl,
@@ -209,12 +219,14 @@ def dl_all_new_items(conn):
             'ignoreerrors': True,
         }
 
-        url = "https://www.pornhub.com/" + str(row[1]) + "/" + str(row[2]) + url_after
+        url = "https://www.pornhub.com/" + \
+            str(row[1]) + "/" + str(row[2]) + url_after
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
         try:
-            c.execute("UPDATE ph_items SET new='0', lastchecked=CURRENT_TIMESTAMP WHERE url_name=?", (row[2],))
+            c.execute(
+                "UPDATE ph_items SET new='0', lastchecked=CURRENT_TIMESTAMP WHERE url_name=?", (row[2],))
             conn.commit()
         except Error as e:
             print(e)
@@ -230,17 +242,13 @@ def dl_start():
         dl_all_items(conn)
 
 
-def custom_dl(name_check):
+def custom_dl(name_check, batch_file_path):
     if name_check == "batch":
-        u_input = input("Please enter full path to the batch-file.txt (or c to cancel): ")
-        if u_input == "c":
-            print("Operation canceled.")
-        else:
-            with open(u_input, 'r') as input_file:
-                for line in input_file:
-                    line = line.strip()
-                    custom_dl_download(line)
-
+        print("use " + batch_file_path + " as batch file")
+        with open(batch_file_path, 'r') as input_file:
+            for line in input_file:
+                line = line.strip()
+                custom_dl_download(line)
     else:
         custom_dl_download(name_check)
 
@@ -249,7 +257,8 @@ def custom_dl_download(url):
     ph_url_check(url)
     ph_alive_check(url)
 
-    outtmpl = get_dl_location('DownloadLocation') + '/handpicked/%(title)s.%(ext)s'
+    outtmpl = get_dl_location('DownloadLocation') + \
+        '/handpicked/%(title)s.%(ext)s'
     ydl_opts = {
         'format': 'best',
         'outtmpl': outtmpl,
@@ -289,7 +298,7 @@ def add_item(name_check):
         print("Item already exists in database")
 
 
-##################################### DATABASE ORIENTED
+# DATABASE ORIENTED
 
 def create_connection(db_file):
     conn = None
@@ -317,7 +326,8 @@ def select_all_items(conn, item):
 
     rows = c.fetchall()
 
-    t = PrettyTable(['Id.', 'Name', 'Type', 'Date created', 'Last checked', 'Url'])
+    t = PrettyTable(
+        ['Id.', 'Name', 'Type', 'Date created', 'Last checked', 'Url'])
     t.align['Id.'] = "l"
     t.align['Name'] = "l"
     t.align['Type'] = "l"
@@ -429,13 +439,13 @@ def create_tables():
         print("Error! cannot create the database connection.")
 
 
-##################################### Lets do it baby
+# Lets do it baby
 
 def first_run():
     create_tables()
 
 
-##################################### MESSAGING
+# MESSAGING
 
 
 def how_to_use(error):
@@ -446,9 +456,12 @@ def how_to_use(error):
     t.align['command'] = "l"
     t.align['item'] = "l"
     t.add_row(['phdler', 'start', ''])
-    t.add_row(['phdler', 'custom', 'url (full PornHub url) | batch (for .txt file)'])
-    t.add_row(['phdler', 'add', 'model | pornstar | channel | user | playlist | batch (for .txt file)'])
-    t.add_row(['phdler', 'list', 'model | pornstar | channel | user | playlist | all'])
+    t.add_row(
+        ['phdler', 'custom', 'url (full PornHub url) | batch (for .txt file)'])
+    t.add_row(['phdler', 'add',
+              'model | pornstar | channel | user | playlist | batch (for .txt file)'])
+    t.add_row(
+        ['phdler', 'list', 'model | pornstar | channel | user | playlist | all'])
     t.add_row(['phdler', 'delete', 'model | pornstar | channel | user | playlist'])
     print(t)
 
@@ -464,8 +477,10 @@ def help_command():
     t.add_row(['custom', 'url | batch', 'download a single video from PornHub'])
     t.add_row(
         ['add', 'model | pornstar | channel | user | playlist | batch (for .txt file)', 'adding item to database'])
-    t.add_row(['list', 'model | pornstar | channel | user | playlist', 'list selected items from database'])
-    t.add_row(['delete', 'model | pornstar | channel | user | playlist', 'delete selected items from database'])
+    t.add_row(['list', 'model | pornstar | channel | user | playlist',
+              'list selected items from database'])
+    t.add_row(['delete', 'model | pornstar | channel | user | playlist',
+              'delete selected items from database'])
     print(t)
     print("Example: phdler add pornhub-url")
     print("------------------------------------------------------------------")

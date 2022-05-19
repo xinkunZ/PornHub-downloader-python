@@ -2,7 +2,7 @@
 from functions import *
 
 def main():
-
+    
     check_for_database()
 
     if len(sys.argv) > 1:
@@ -11,8 +11,8 @@ def main():
             dl_start()
             
         elif sys.argv[1] == "custom":
-            if len(sys.argv) > 2:
-                custom_dl(sys.argv[2])
+            if len(sys.argv) > 3:
+                custom_dl(sys.argv[2], sys.argv[3])
             else:
                 how_to_use("Missing item")
 
