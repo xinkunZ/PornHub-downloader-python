@@ -153,7 +153,7 @@ def dl_all_items(conn):
 
         # Find more available options here: https://github.com/ytdl-org/youtube-dl/blob/master/youtube_dl/YoutubeDL.py#L129-L279
         outtmpl = get_dl_location('DownloadLocation') + '/' + \
-            str(row[1]) + '/' + str(row[3]) + '/%(title)s.%(ext)s'
+                  str(row[1]) + '/' + str(row[3]) + '/%(title)s.%(ext)s'
         ydl_opts_start = {
             'format': 'best',
             'playliststart:': 1,
@@ -165,7 +165,7 @@ def dl_all_items(conn):
         }
 
         url = "https://www.pornhub.com/" + \
-            str(row[1]) + "/" + str(row[2] + url_after)
+              str(row[1]) + "/" + str(row[2] + url_after)
         with youtube_dl.YoutubeDL(ydl_opts_start) as ydl:
             ydl.download([url])
 
@@ -210,7 +210,7 @@ def dl_all_new_items(conn):
 
         # Find more available options here: https://github.com/ytdl-org/youtube-dl/blob/master/youtube_dl/YoutubeDL.py#L129-L279
         outtmpl = get_dl_location('DownloadLocation') + '/' + \
-            str(row[1]) + '/' + str(row[3]) + '/%(title)s.%(ext)s'
+                  str(row[1]) + '/' + str(row[3]) + '/%(title)s.%(ext)s'
         ydl_opts = {
             'format': 'best',
             'outtmpl': outtmpl,
@@ -220,7 +220,7 @@ def dl_all_new_items(conn):
         }
 
         url = "https://www.pornhub.com/" + \
-            str(row[1]) + "/" + str(row[2]) + url_after
+              str(row[1]) + "/" + str(row[2]) + url_after
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
@@ -258,13 +258,14 @@ def custom_dl_download(url):
     ph_alive_check(url)
 
     outtmpl = get_dl_location('DownloadLocation') + \
-        '/handpicked/%(title)s.%(ext)s'
+              '/handpicked/%(title)s.%(ext)s'
     ydl_opts = {
         'format': 'best',
         'outtmpl': outtmpl,
         'nooverwrites': True,
         'no_warnings': False,
         'ignoreerrors': True,
+        "cookiefile": "../config/cookies.txt"
     }
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -459,7 +460,7 @@ def how_to_use(error):
     t.add_row(
         ['phdler', 'custom', 'url (full PornHub url) | batch (for .txt file)'])
     t.add_row(['phdler', 'add',
-              'model | pornstar | channel | user | playlist | batch (for .txt file)'])
+               'model | pornstar | channel | user | playlist | batch (for .txt file)'])
     t.add_row(
         ['phdler', 'list', 'model | pornstar | channel | user | playlist | all'])
     t.add_row(['phdler', 'delete', 'model | pornstar | channel | user | playlist'])
@@ -478,9 +479,9 @@ def help_command():
     t.add_row(
         ['add', 'model | pornstar | channel | user | playlist | batch (for .txt file)', 'adding item to database'])
     t.add_row(['list', 'model | pornstar | channel | user | playlist',
-              'list selected items from database'])
+               'list selected items from database'])
     t.add_row(['delete', 'model | pornstar | channel | user | playlist',
-              'delete selected items from database'])
+               'delete selected items from database'])
     print(t)
     print("Example: phdler add pornhub-url")
     print("------------------------------------------------------------------")
