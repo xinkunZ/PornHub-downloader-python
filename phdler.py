@@ -2,7 +2,7 @@
 from functions import *
 
 def main():
-    
+    #sys.argv=["phdler","custom","https://cn.pornhub.com/view_video.php?viewkey=ph60e9b64e7bc85"]
     check_for_database()
 
     if len(sys.argv) > 1:
@@ -14,7 +14,7 @@ def main():
             if len(sys.argv) > 3:
                 custom_dl(sys.argv[2], sys.argv[3])
             else:
-                how_to_use("Missing item")
+                custom_dl(sys.argv[2],"")
 
         elif sys.argv[1] == "add":
             if len(sys.argv) > 2:
