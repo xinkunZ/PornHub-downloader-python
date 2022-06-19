@@ -265,7 +265,7 @@ def custom_dl_download(url):
         'nooverwrites': True,
         'no_warnings': False,
         'ignoreerrors': True,
-        "cookiefile": "./config/cookies.txt"
+        "cookiefile": "/opt/docker/config/cookies.txt"
     }
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
